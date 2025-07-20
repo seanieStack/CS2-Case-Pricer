@@ -10,8 +10,8 @@
 
  1. Clone the repository
 ```bash
-git clone <link>
-cd <repo_name>
+git clone https://github.com/seanieStack/CS2-Case-Pricer.git
+cd CS2-Case-Pricer
 ```
  2. Install dependencies
  ```bash

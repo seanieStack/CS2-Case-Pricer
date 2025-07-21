@@ -1,0 +1,48 @@
+settings:
+  inventory_file: inv.csv
+  steam_api_url: https://steamcommunity.com/market/priceoverview/
+  api_delay: 5
+  currency: 3
+
+cases:
+  - Kilowatt Case
+  - Fever Case
+  - Fracture Case
+  - Recoil Case
+  - Dreams & Nightmares Case
+  - Snakebite Case
+  - Revolution Case
+  - Danger Zone Case
+  - Spectrum 2 Case
+  - Glove Case
+  - Clutch Case
+  - Gamma 2 Case
+  - Falchion Case
+  - Prisma 2 Case
+  - Gamma Case
+  - Prisma Case
+  - CS20 Case
+  - Shadow Case
+  - Spectrum Case
+  - Chroma 3 Case
+  - Revolver Case
+  - Operation Wildfire Case
+  - Chroma 2 Case
+  - Operation Breakout Weapon Case
+  - Horizon Case
+  - Chroma Case
+  - Operation Broken Fang Case
+  - Operation Phoenix Weapon Case
+  - Shattered Web Case
+  - Operation Vanguard Weapon Case
+  - Huntsman Weapon Case
+  - Operation Riptide Case
+  - CS:GO Weapon Case 3
+  - eSports 2014 Summer Case
+  - CS:GO Weapon Case 2
+  - Winter Offensive Weapon Case
+  - Operation Hydra Case
+  - eSports 2013 Winter Case
+  - Operation Bravo Case
+  - CS:GO Weapon Case
+  - eSports 2013 Case

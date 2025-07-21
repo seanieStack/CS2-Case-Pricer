@@ -3,57 +3,20 @@ import os
 import requests
 import json
 import time
+import yaml
 from colorama import Fore, Back, Style, init
 
 init(autoreset=True)
 
-INVENTORY_FILE = "inv.csv"
-STEAM_API_URL = "https://steamcommunity.com/market/priceoverview/"
-API_DELAY = 5
+with open('config.yaml', 'r') as f:
+    config = yaml.safe_load(f)
 
-CASES = [
-    "Kilowatt Case",
-    "Fever Case",
-    "Fracture Case",
-    "Recoil Case",
-    "Dreams & Nightmares Case",
-    "Snakebite Case",
-    "Revolution Case",
-    "Danger Zone Case",
-    "Spectrum 2 Case",
-    "Glove Case",
-    "Clutch Case",
-    "Gamma 2 Case",
-    "Falchion Case",
-    "Prisma 2 Case",
-    "Gamma Case",
-    "Prisma Case",
-    "CS20 Case",
-    "Shadow Case",
-    "Spectrum Case",
-    "Chroma 3 Case",
-    "Revolver Case",
-    "Operation Wildfire Case",
-    "Chroma 2 Case",
-    "Operation Breakout Weapon Case",
-    "Horizon Case",
-    "Chroma Case",
-    "Operation Broken Fang Case",
-    "Operation Phoenix Weapon Case",
-    "Shattered Web Case",
-    "Operation Vanguard Weapon Case",
-    "Huntsman Weapon Case",
-    "Operation Riptide Case",
-    "CS:GO Weapon Case 3",
-    "eSports 2014 Summer Case",
-    "CS:GO Weapon Case 2",
-    "Winter Offensive Weapon Case",
-    "Operation Hydra Case",
-    "eSports 2013 Winter Case",
-    "Operation Bravo Case",
-    "CS:GO Weapon Case",
-    "eSports 2013 Case"
-]
+INVENTORY_FILE = config['settings']['inventory_file']
+STEAM_API_URL = config['settings']['steam_api_url']
+API_DELAY = config['settings']['api_delay']
+CURRENCY = config['settings']['currency']
+
+CASES = config['cases']
 
 def main():
     print_header()
@@ -187,7 +150,7 @@ def check_prices(inventory):
 
 def fetch_steam_price(market_hash_name):
     params = {
-        'currency': 3,
+        'currency': CURRENCY,
         'appid': 730,
         'market_hash_name': market_hash_name
     }

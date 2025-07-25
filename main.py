@@ -4,6 +4,7 @@ import requests
 import json
 import time
 import yaml
+import re
 from colorama import Fore, Back, Style, init
 
 init(autoreset=True)
@@ -17,6 +18,50 @@ API_DELAY = config['settings']['api_delay']
 CURRENCY = config['settings']['currency']
 
 CASES = config['cases']
+
+CURRENCY_SYMBOLS = {
+    1: '$',      # USD (US Dollar)
+    2: '£',      # GBP (British Pound)
+    3: '€',      # EUR (Euro)
+    4: 'CHF',    # CHF (Swiss Franc)
+    5: '₽',      # RUB (Russian Ruble)
+    6: 'zł',     # PLN (Polish Złoty)
+    7: 'R$',     # BRL (Brazilian Real)
+    8: 'kr',     # NOK (Norwegian Krone)
+    9: 'kr',     # SEK (Swedish Krona)
+    10: 'Rp',    # IDR (Indonesian Rupiah)
+    11: 'RM',    # MYR (Malaysian Ringgit)
+    12: '₱',     # PHP (Philippine Peso)
+    13: 'S$',    # SGD (Singapore Dollar)
+    14: '฿',     # THB (Thai Baht)
+    15: '₫',     # VND (Vietnamese Dong)
+    16: '₩',     # KRW (South Korean Won)
+    17: '₺',     # TRY (Turkish Lira)
+    18: '₴',     # UAH (Ukrainian Hryvnia)
+    19: 'MX$',   # MXN (Mexican Peso)
+    20: 'CA$',   # CAD (Canadian Dollar)
+    21: 'A$',    # AUD (Australian Dollar)
+    22: 'NZ$',   # NZD (New Zealand Dollar)
+    23: '¥',     # CNY (Chinese Yuan)
+    24: '₹',     # INR (Indian Rupee)
+    25: 'CLP',   # CLP (Chilean Peso)
+    26: 'S/',    # PEN (Peruvian Sol)
+    27: 'COL$',  # COP (Colombian Peso)
+    28: 'R',     # ZAR (South African Rand)
+    29: 'HK$',   # HKD (Hong Kong Dollar)
+    30: 'NT$',   # TWD (Taiwan Dollar)
+    31: '﷼',     # SAR (Saudi Riyal)
+    32: 'د.إ',   # AED (UAE Dirham)
+    34: 'AR$',   # ARS (Argentine Peso)
+    35: '₪',     # ILS (Israeli Shekel)
+    37: '₸',     # KZT (Kazakhstani Tenge)
+    38: 'د.ك',   # KWD (Kuwaiti Dinar)
+    39: '﷼',     # QAR (Qatari Riyal)
+    40: '₡',     # CRC (Costa Rican Colón)
+    41: 'UY$',   # UYU (Uruguayan Peso)
+}
+
+CURRENCY_SYMBOL = CURRENCY_SYMBOLS[int(CURRENCY)]
 
 def main():
     print_header()
@@ -126,7 +171,7 @@ def check_prices(inventory):
         prices[item['name']] = price
         
         if price:
-            print(f"{Fore.GREEN}: €{price:.2f}{Style.RESET_ALL}")
+            print(f"{Fore.GREEN}: {CURRENCY_SYMBOL}{price:.2f}{Style.RESET_ALL}")
         
         if i < len(items_to_check):
             time.sleep(API_DELAY)
@@ -139,12 +184,12 @@ def check_prices(inventory):
             if price is not None:
                 item_total = price * quantity
                 total_value += item_total
-                print(f"{Fore.WHITE}{item['name']:<40}{Style.RESET_ALL} | {Fore.CYAN}{quantity:>3}{Style.RESET_ALL} x {Fore.GREEN}€{price:>6.2f}{Style.RESET_ALL} = {Fore.YELLOW}€{item_total:>8.2f}{Style.RESET_ALL}")
+                print(f"{Fore.WHITE}{item['name']:<40}{Style.RESET_ALL} | {Fore.CYAN}{quantity:>3}{Style.RESET_ALL} x {Fore.GREEN}{CURRENCY_SYMBOL}{price:>6.2f}{Style.RESET_ALL} = {Fore.YELLOW}{CURRENCY_SYMBOL}{item_total:>8.2f}{Style.RESET_ALL}")
             else:
                 print(f"{Fore.WHITE}{item['name']:<40}{Style.RESET_ALL} | {Fore.CYAN}{quantity:>3}{Style.RESET_ALL} x {Fore.RED}[Price unavailable]{Style.RESET_ALL}")
     
     print(f"{Fore.MAGENTA}-{Style.RESET_ALL}"*60)
-    print(f"{Fore.YELLOW}{Style.BRIGHT}{'TOTAL VALUE:':<40}{Style.RESET_ALL} | {'':<15} {Fore.GREEN}{Style.BRIGHT}€{total_value:>8.2f}{Style.RESET_ALL}")
+    print(f"{Fore.YELLOW}{Style.BRIGHT}{'TOTAL VALUE:':<40}{Style.RESET_ALL} | {'':<15} {Fore.GREEN}{Style.BRIGHT}{CURRENCY_SYMBOL}{total_value:>8.2f}{Style.RESET_ALL}")
     input(f"\n{Fore.WHITE}Press Enter to continue...{Style.RESET_ALL}")
 
 
@@ -172,9 +217,10 @@ def fetch_steam_price(market_hash_name):
 
 def parse_price(price_str):
     try:
-        cleaned = price_str.replace("€", "").replace(',', '.').strip()
+        cleaned = re.sub(r'[^\d.,+-]', '', price_str)
+        cleaned = cleaned.replace(',', '.').strip()
         return float(cleaned)
-    except ValueError:
+    except (ValueError, AttributeError):
         return 0.0
 
 
